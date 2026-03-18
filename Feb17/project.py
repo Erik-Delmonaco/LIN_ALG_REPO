@@ -6,8 +6,8 @@ import numpy as np
 
 data = pd.read_csv('data.csv')
 
-features = torch.tensor(data.drop('Price',axis = 1).to_numpy()).float()
-target = torch.tensor(data['Price'].to_numpy()).float().reshape(-1,1)
+features = torch.tensor(data.drop('Exam Score',axis = 1).to_numpy()).float()
+target = torch.tensor(data['Exam Score'].to_numpy()).float().reshape(-1,1)
 
 fm = features.mean()
 fs = features.std()
@@ -32,7 +32,7 @@ for epoch in range(epochs):
     print(loss)
 
 features = torch.tensor([
-    [1500.0]
+    [5.5]
 ])
 
 X = (features - fm)/fs
