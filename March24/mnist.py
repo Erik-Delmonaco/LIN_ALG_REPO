@@ -7,7 +7,7 @@ import torch.optim as optim
 
 torch.manual_seed(1)
 
-dataset = datasets.MNIST(
+dataset = datasets.CIFAR10(
     root = './data',
     train = True,
     download = True,
@@ -17,7 +17,7 @@ dataset = datasets.MNIST(
     ])
 )
 
-test_dataset = datasets.MNIST(
+test_dataset = datasets.CIFAR10(
     root = './data',
     train = False,
     download = True,
@@ -41,19 +41,30 @@ test_loader = DataLoader(
     shuffle = False
 )
 
+
 model = nn.Sequential(
+    # Convolutional layers
+    nn.Conv2d(3, 32, kernel_size=3, padding=1),
+    nn.ReLU(),
+    nn.MaxPool2d(2, 2),
+    
+    nn.Conv2d(32, 64, kernel_size=3, padding=1),
+    nn.ReLU(),
+    nn.MaxPool2d(2, 2),
+    
+    nn.Conv2d(64, 128, kernel_size=3, padding=1),
+    nn.ReLU(),
+    
+    # Flatten and fully connected layers
     nn.Flatten(),
-    nn.Linear(784,128),
+    nn.Linear(128 * 8 * 8, 256),
     nn.ReLU(),
-    nn.Linear(128,64),
-    nn.ReLU(),
-    nn.Linear(64,10)
+    nn.Linear(256, 10)
 )
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(),lr = .001)
 epochs = 10
-
 
 for epoch in range(epochs):
     total_loss = 0
@@ -82,7 +93,7 @@ for epoch in range(epochs):
     print(test_correct/test_total)
     print("----------------")
 
-torch.save(model.state_dict(),'model.pth')
+torch.save(model.state_dict(),'cifar.pth')
 
 
 
